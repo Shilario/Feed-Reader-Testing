@@ -27,46 +27,133 @@ $(function() {
         });
 
 
-        /* TODO: Write a test that loops through each feed
+        /*
+         * Write a test that loops through each feed
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
+        it('allFeeds urls property defined', function () {
+            // loop through the allFeeds array to test if the url property is present in each object
+            for (const feed of allFeeds) {
+                expect(feed.url).toBeDefined();
+            }
+        });
 
-
-        /* TODO: Write a test that loops through each feed
+        /*
+         * Write a test that loops through each feed
          * in the allFeeds object and ensures it has a name defined
          * and that the name is not empty.
          */
+        it('allFeeds names property defined', function () {
+            // loop through the allFeeds array to test if the name property is present in each object
+            for (const feed of allFeeds) {
+                expect(feed.name).toBeDefined();
+            }
+        });
     });
 
-
-    /* TODO: Write a new test suite named "The menu" */
-
-        /* TODO: Write a test that ensures the menu element is
+    /*  Write a new test suite named "The menu" */
+    describe('The menu', function () {
+        /*
+         * Write a test that ensures the menu element is
          * hidden by default. You'll have to analyze the HTML and
          * the CSS to determine how we're performing the
          * hiding/showing of the menu element.
          */
+        it('menu elements hidden by default', function () {
+            // get all class attributes from the body
+            let bodyElement = $('body').attr("class");
 
-         /* TODO: Write a test that ensures the menu changes
+            // test that the body element does have the class menu-hidden
+            expect(bodyElement).toBe('menu-hidden');
+        });
+
+         /*
+          * Write a test that ensures the menu changes
           * visibility when the menu icon is clicked. This test
           * should have two expectations: does the menu display when
           * clicked and does it hide when clicked again.
           */
+         it('menu elements toggle visibility when click', function () {
+             let bodyElement,
+                 menuIcon = $('.menu-icon-link');
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+             // trigger click event on the menu icon
+             menuIcon.click();
 
-        /* TODO: Write a test that ensures when the loadFeed
+             // get all class attributes from the body
+             bodyElement = $('body').attr("class");
+
+             // test that the body element does not have the class menu-hidden
+             expect(bodyElement).toBe('');
+
+             // trigger click event on the menu icon
+             menuIcon.click();
+
+             // get all class attributes from the body
+             bodyElement = $('body').attr("class");
+
+             // test that the body element does have the class menu-hidden
+             expect(bodyElement).toBe('menu-hidden');
+         });
+    });
+
+    /* Write a new test suite named "Initial Entries" */
+    describe('Initial Entries', function () {
+        beforeEach(function (done) {
+            loadFeed(0, function () {
+                done();
+            });
+        });
+
+        /*
+         * Write a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+        it('entry class element present after running loadFeed()', function (done) {
+            var container_entries = $('.entry');
+            expect(container_entries.length).toBe(10);
+            done();
+        });
+    });
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
-
-        /* TODO: Write a test that ensures when a new feed is loaded
+    /* Write a new test suite named "New Feed Selection" */
+    describe('New Feed Selection', function () {
+        beforeEach(function (done) {
+            let title = $('.header-title');
+            expect(title.text()).toBe('Udacity Blog');
+            loadFeed(1, function () {
+                done();
+            });
+        });
+        /*
+         * Write a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+        it('content change after calling loadFeed()', function (done) {
+            let title = $('.header-title'),
+                entryElements = $('.entry>h2'),
+                entryLinksElements = $('.entry-link'),
+                expectedValues = ['Hey hey `font-display`', '1 HTML Element + 5 CSS Properties = Magic!', 'Museum of Websites', 'BigCommerce: eCommerce Your Way (and Design Awards!)', 'Some Recent Live Coding Favorites', 'New CSS Features Are Enhancing Everything You Know About Web Design',
+                'Another Collection of Interesting Facts About CSS Grid', 'It’s Time for an RSS Revival', 'Wufoo and Worldpay', 'Working With the new CSS Typed Object Model'],
+                expectedLinks = ['https://css-tricks.com/hey-hey-font-display/', 'https://css-tricks.com/1-html-element-5-css-properties-magic/', 'https://www.kapwing.com/evolution-of-products', 'https://css-tricks.com/bigcommerce-sponsored-post/',
+                'https://css-tricks.com/some-recent-live-coding-favorites/', 'https://css-tricks.com/new-css-features-are-enhancing-everything-you-know-about-web-design/', 'https://css-tricks.com/another-collection-of-interesting-facts-about-css-grid/',
+                'https://www.wired.com/story/rss-readers-feedly-inoreader-old-reader/', 'https://ad.doubleclick.net/ddm/clk/303181152;128762502;s', 'https://developers.google.com/web/updates/2018/03/cssom'];
+
+            expect(title.text()).toBe('CSS Tricks');
+
+            entryElements.each(function(index,item){
+                expect(item.innerHTML === expectedValues[index]).toBe(true);
+            });
+
+            entryLinksElements.each(function (index, link) {
+                expect(link.href === expectedLinks[index]).toBe(true);;
+            });
+            done();
+        });
+    });
 }());
