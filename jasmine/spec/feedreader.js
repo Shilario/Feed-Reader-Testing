@@ -151,7 +151,7 @@ $(function() {
             });
 
             entryLinksElements.each(function (index, link) {
-                expect(link.href === expectedLinks[index]).toBe(true);;
+                expect(link.href === expectedLinks[index]).toBe(true);
             });
             done();
         });
