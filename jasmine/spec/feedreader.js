@@ -122,9 +122,11 @@ $(function() {
 
     /* Write a new test suite named "New Feed Selection" */
     describe('New Feed Selection', function () {
+        let titleBeforeCall = $('.header-title'),
+            entryElementsBeforeCall = $('.entry>h2'),
+            entryLinksElementsBeforeCall = $('.entry-link');
+
         beforeEach(function (done) {
-            let title = $('.header-title');
-            expect(title.text()).toBe('Udacity Blog');
             loadFeed(1, function () {
                 done();
             });
@@ -137,22 +139,12 @@ $(function() {
         it('content change after calling loadFeed()', function (done) {
             let title = $('.header-title'),
                 entryElements = $('.entry>h2'),
-                entryLinksElements = $('.entry-link'),
-                expectedValues = ['Hey hey `font-display`', '1 HTML Element + 5 CSS Properties = Magic!', 'Museum of Websites', 'BigCommerce: eCommerce Your Way (and Design Awards!)', 'Some Recent Live Coding Favorites', 'New CSS Features Are Enhancing Everything You Know About Web Design',
-                'Another Collection of Interesting Facts About CSS Grid', 'It’s Time for an RSS Revival', 'Wufoo and Worldpay', 'Working With the new CSS Typed Object Model'],
-                expectedLinks = ['https://css-tricks.com/hey-hey-font-display/', 'https://css-tricks.com/1-html-element-5-css-properties-magic/', 'https://www.kapwing.com/evolution-of-products', 'https://css-tricks.com/bigcommerce-sponsored-post/',
-                'https://css-tricks.com/some-recent-live-coding-favorites/', 'https://css-tricks.com/new-css-features-are-enhancing-everything-you-know-about-web-design/', 'https://css-tricks.com/another-collection-of-interesting-facts-about-css-grid/',
-                'https://www.wired.com/story/rss-readers-feedly-inoreader-old-reader/', 'https://ad.doubleclick.net/ddm/clk/303181152;128762502;s', 'https://developers.google.com/web/updates/2018/03/cssom'];
+                entryLinksElements = $('.entry-link');
 
-            expect(title.text()).toBe('CSS Tricks');
+            expect(titleBeforeCall).not.toBe(title);
+            expect(entryElementsBeforeCall).not.toBe(entryElements);
+            expect(entryLinksElementsBeforeCall).not.toBe(entryLinksElements);
 
-            entryElements.each(function(index,item){
-                expect(item.innerHTML === expectedValues[index]).toBe(true);
-            });
-
-            entryLinksElements.each(function (index, link) {
-                expect(link.href === expectedLinks[index]).toBe(true);
-            });
             done();
         });
     });
